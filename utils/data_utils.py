@@ -1,35 +1,38 @@
-
-
 PatternNet_label_classes = {
-    'Airfield': 0,
-    'Anchorage': 1,
-    'Beach': 2,
-    'DenseResidential': 3,
-    'Farm': 4,
-    'Flyover': 5,
-    'Forest': 6,
-    'GameSpace': 7, 
-    'ParkingSpace': 8, 
-    'River': 9, 
-    'SparseResidential': 10,
-    'StorageCisterns': 11,
+    "Airfield": 0,
+    "Anchorage": 1,
+    "Beach": 2,
+    "DenseResidential": 3,
+    "Farm": 4,
+    "Flyover": 5,
+    "Forest": 6,
+    "GameSpace": 7,
+    "ParkingSpace": 8,
+    "River": 9,
+    "SparseResidential": 10,
+    "StorageCisterns": 11,
 }
 
 
 EuroSAT_label_classes = {
-    'AnnualCrop': 0,
-    'Forest': 1,
-    'HerbaceousVegetation': 2,
-    'Highway': 3,
-    'Industrial': 4,
-    'Pasture': 5,
-    'PermanentCrop': 6,
-    'Residential': 7, 
-    'River': 8, 
-    'SeaLake': 9
-    }
+    "AnnualCrop": 0,
+    "Forest": 1,
+    "HerbaceousVegetation": 2,
+    "Highway": 3,
+    "Industrial": 4,
+    "Pasture": 5,
+    "PermanentCrop": 6,
+    "Residential": 7,
+    "River": 8,
+    "SeaLake": 9,
+}
 
 
+def get_key_patternet(in_value):
+    for key, value in PatternNet_label_classes.items():
+        if value == in_value:
+            return key
+    return None
 
 def get_label_patternet(label):
     labels = [0] * 12
@@ -38,6 +41,7 @@ def get_label_patternet(label):
     labels[index] = 1
 
     return labels
+
 
 def get_label_eurosat(label):
     labels = [0] * 10

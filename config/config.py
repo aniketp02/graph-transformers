@@ -9,7 +9,7 @@ class CNNTrainingOptions():
     def parse_args(self):
         self.parser.add_argument('--filelists', type=str, help='train filelists path')
         self.parser.add_argument('--data_root', type=str, help='train data path')
-        self.parser.add_argument('--batch_size', type=int, default=16, help='batch size for training')
+        self.parser.add_argument('--batch_size', type=int, default=128, help='batch size for training')
         self.parser.add_argument('--epochs', type=int, default=100, help='No. of epoch to train')
         self.parser.add_argument('--checkpoint', type=int, default=2, help='Checkpoint to save')
         self.parser.add_argument('--checkpoint_path', type=str, default="./checkpoints",

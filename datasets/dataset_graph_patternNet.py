@@ -12,7 +12,9 @@ from utils.data_utils import get_label_patternet
 
 class PatternNetGraphDataset(Dataset):
     def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
-        super(PatternNetGraphDataset, self).__init__(root, transform, pre_transform, pre_filter)
+        super(PatternNetGraphDataset, self).__init__(
+            root, transform, pre_transform, pre_filter
+        )
 
     @property
     def raw_file_names(self):
@@ -31,42 +33,37 @@ class PatternNetGraphDataset(Dataset):
             img_path = raw_path
             print("raw path is :", raw_path)
 
-            label_file = raw_path.split('raw/')[-1]
-            label_name = label_file.split('/')[0]
+            label_file = raw_path.split("raw/")[-1]
+            label_name = label_file.split("/")[0]
             print("label name is :", label_name)
 
             labels = get_label_patternet(label_name)
             labels = torch.FloatTensor(labels).cuda()
+            labels = torch.reshape(labels, (1, labels.shape[0]))
 
-            img = cv2.imread(img_path)
-            H, W, C = img.shape
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+            img = cv2.resize(img, (64, 64))
+            H, W = img.shape
 
             edge_index, pos = torch_geometric.utils.grid(H, W)
 
-            img = img.reshape(H * W, C)
+            img = img.reshape(H * W, 1)
             img = torch.FloatTensor(img)
 
-            y = labels.unsqueeze(0).repeat(H * W, 1)
-
-            data = Data(x=img, edge_index=edge_index, y=y, pos=pos)
+            data = Data(x=img, edge_index=edge_index, y=labels, pos=pos)
 
             processed_directory = osp.join(self.processed_dir, label_file)
-            processed_file = label_file.replace(label_file.split('.')[-1], 'pt')
+            processed_file = label_file.replace(label_file.split(".")[-1], "pt")
             processed_file_path = osp.join(self.processed_dir, processed_file)
-
-            # print("processed file path :", processed_file_path)
-            # break
 
             Path(processed_directory).mkdir(parents=True, exist_ok=True)
 
             torch.save(data, processed_file_path)
 
-
     def len(self):
         return len(self.raw_file_names)
-    
+
     def get(self, idx):
-        data_path = self.processed_file_names[idx].split('\n')[0]
-        # print("data path is ", data_path)
+        data_path = self.processed_file_names[idx].split("\n")[0]
         data = torch.load(data_path)
         return data
